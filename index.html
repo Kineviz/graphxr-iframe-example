@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        Iframe Example
+    </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="Kineviz inc.">
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+         }
+
+        iframe {
+            position: fixed;
+            left: 40%;
+            height: 100%;
+            width: 60%;
+            border: none;
+            overflow: hidden;
+        }
+
+        .header {
+            position: fixed;
+            left: 0;
+            height: 100%;
+            width: 40%;
+            border: none;
+            overflow: hidden;
+        }
+
+             .header > div{
+
+            float:left;
+             }
+
+        .header .code {
+            width: 80%;
+            height: 100%;
+        }
+
+        .header textarea {
+            width: 96%;
+            padding:2%;
+            border-radius: 0px;
+            height: 96%;
+            color: #222222;
+            font-size: 18px;
+        }
+
+        .header .btn {
+            cursor: pointer;
+            text-align: center;
+            height: 120px;
+            line-height: 120px;
+            width:18%;
+            margin:20px 1%;
+            border-radius: 4px;
+            color: white;
+            background-color:green;
+        }
+    </style>
+
+    <!--Please -->
+    <script src='./graphXR.injection.js'></script>
+
+</head>
+
+<body>
+
+
+    <div class="header">
+        <div class="code">
+            <textarea id='code-area'>
+/*
+Create a project ,from Project=>Data, create a view enable share 
+from the project window by clicking on the lock icon
+Get the shared view link, for example, here is a link for VC data set:
+https://graphxr.kineviz.com/share/5c633dfe197b00001e855294/VC%20investment%202004-2013/5c65e7be851f2c0036ef27c9
+
+*/
+let iframeElem = document.getElementById("injection-graphXR-iframe-id");
+
+graphXR.injectionApiCommand(':getGraph', iframeElem)
+.then((resData) => {
+    alert(JSON.stringify(resData,null,2));
+    //please open develop tool and goto console, search with "Receive graphData"
+    console.warn("Receive graphData:", resData.content)
+})
+
+       </textarea>
+        </div>
+        <div class="btn" onclick="handleClick()"> RUN </div>
+    </div>
+   
+
+<iframe id="injection-graphXR-iframe-id"  origin="*" > </iframe>
+
+<script id="script" type="text/javascript">
+    let getQueryString = function (name) {
+           let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+           let r = window.location.search.substr(1).match(reg);
+           if (r != null) return unescape(r[2]); return null;
+       }
+       let defaultEmbedGraphURL = 'https://graphxr.kineviz.com/share/5fad3be86fd8dd0068f8c833/Russian%20Troll%20Tweets%20/5fad3cc86fd8dd0068f8c8d4/Russian-troll-tweets'
+       let iframe = document.getElementById('injection-graphXR-iframe-id');
+       iframe.setAttribute('src', getQueryString('embedGraphURL') || getQueryString('url') || iframe.getAttribute('src') ||  defaultEmbedGraphURL);
+   </script>
+
+<script id="script" type="text/javascript">
+    let handleClick = function () {
+        try {
+            eval(document.getElementById("code-area").value);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "graphxr-injection",
+  "version": "0.0.1",
+  "license": "MIT",
+  "preferGlobal": true,
+  "scripts": {
+    "start": "browser-sync start --server  --serveStatic --watch"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "eslint": "^7.1.0"
+  }
+}

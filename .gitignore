@@ -1,0 +1,10 @@
+.DS_Store
+*.lerna_backup
+private.xml
+*.log
+*.code-workspace
+package-lock.json
+node_modules
+build
+start.sh
+yarn.lock
