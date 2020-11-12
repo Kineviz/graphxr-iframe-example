@@ -1,5 +1,7 @@
 ### GraphXR Iframe example(V2.8.0)
 
+Your can try with <https://kineviz.github.io/graphxr-iframe-example/> at first
+
 > Please refer the graphXR.injection.js in <head> tag at first
 
 ```
