@@ -1,8 +1,15 @@
 {
-  "name": "graphxr-injection",
+  "name": "@kineviz/graphxr-injection",
   "version": "0.0.1",
   "license": "MIT",
   "preferGlobal": true,
+  "main": "graphXR.injection.js",
+  "module": "graphXR.injection.js",
+   "files": [
+    "graphXR.injection.js",
+    "package.json",
+    "README.md"
+  ],
   "scripts": {
     "start": "browser-sync start --server  --serveStatic --watch"
   },

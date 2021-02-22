@@ -1,8 +1,8 @@
-### GraphXR Iframe example(V2.8.0)
+### GraphXR Iframe example(V2.9.0 beta)
 
 Your can try with <https://kineviz.github.io/graphxr-iframe-example/> at first
 
-> Please refer the graphXR.injection.js in <head> tag at first
+> Please refer the <https://kineviz.github.io/graphxr-iframe-example/graphXR.injection.js> in <head> tag at first
 
 ```
  <script src='graphXR.injection.js'></script>
@@ -30,7 +30,7 @@ then add graphXR share link as iframe embedGraphURL.
 You can change defaultEmbedGraphURL in index.html line 116
 
 ```
-http://localhost:3000?embedGraphURL=https://graphxr.kineviz.com/share/5c633dfe197b00001e855294/VC%20investment%202004-2013/5c65e7be851f2c0036ef27c9
+http://localhost:3000?embedGraphURL=https://graphxrdev.kineviz.com/p/602d2b0787329b003351adee/blank/6033b824378ffc0034884a58/IP-TEST
 ```
 
 ### 1. ApiCommand 
@@ -49,7 +49,7 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
 ``` 
 graphXR.injectionApiCommand(':getGraphStat', iframeElem)
 .then((resData) => {
-    console.warn("Receive getGraphStat:", resData.content)
+    console.warn("Receive graphStat:", resData.content)
 })
 ```
 
@@ -67,11 +67,20 @@ graphXR.injectionApiCommand(':clearGraph', iframeElem)
 ```
 graphXR.injectionApiCommand(':selected', iframeElem)
 .then((resData) => {
-    console.warn("Receive query data:", resData.content)
+    console.warn("Receive selected data:", resData.content)
 }) 
 ``` 
 
-#### 1.5 query resData.content {nodes:number,edges:number}
+#### 1.5 get top 200 nodes nearby camera  {nodes}
+
+```
+graphXR.injectionApiCommand(':nearby', iframeElem)
+.then((resData) => {
+    console.warn("Receive nearby data:", resData.content)
+}) 
+``` 
+
+#### 1.6 query resData.content {nodes:number,edges:number}
 
 ```
 graphXR.injectionApiCommand('MATCH (n)-[r]-(m) RETURN * LIMIT 100', iframeElem)
@@ -83,7 +92,22 @@ graphXR.injectionApiCommand('MATCH (n)-[r]-(m) RETURN * LIMIT 100', iframeElem)
 
 ###  2. Injection codes 
 
-#### 2.1 select all
+#### 2.1 select all (injectionCode is beta function, so do not recommand use it.)
+
+```
+graphXR.injectionApiCommand(':getGraph', iframeElem)
+.then((resData) => {
+    console.warn("Receive all data:", resData.content)
+    const {nodes} = resData.content;
+    graphXR.injectionCode(`
+        _GXR.NodesSelectManager.selectWithNodeIds(${JSON.stringify(nodes.map(n => n._GXRID))},'new')
+    ` , iframeElem).then(resData => {
+        console.warn("Injection select all nodes success:", resData)
+    })
+})
+```
+
+#### 2.2 update twinkled 
 
 ```
 graphXR.injectionApiCommand(':getGraph', iframeElem)
@@ -91,15 +115,37 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
     console.warn("Receive all data:", resData.content)
     const {nodes, edges} = resData.content;
 
-    //select all 
-    graphXR.injectionCode(`
-        _GXR.NodesSelectManager.selectWithNodeIds(${JSON.stringify(nodes.map(n => n._GXRID))},'new')
-    ` , iframeElem).then(resData => {
-        console.warn("Injection success:", resData)
+    //update twinkled 
+    let colors =['red','yellow','green',null]
+    let topNode10 = (nodes ||[]).slice(0,10).map((n,i) =>{
+        //will can auto update the props to the node
+        let otherProps ={_index:i}
+        return{
+          id: n._GXRID,
+          rate: i%4+1,
+          color: colors[i%4],//color is null, mean rest to bak
+          ...otherProps
+        }
     })
+    let  ignoreTwinkled = true; // skip clear old twinkled
+    graphXR.injectionApiFunc(
+        "updateTwinkled",
+        { nodes: topNode10, ignoreTwinkled },
+        iframeElem
+        );
 })
+ 
 ```
 
+```
+//clear twinkled
+ let ignoreTwinkled = false;
+  graphXR.injectionApiFunc(
+        "updateTwinkled",
+        { nodes: [], ignoreTwinkled },
+        iframeElem
+        );
+```
  
 ###  3. event,  only support ['change','select']
 
