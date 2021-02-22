@@ -1,0 +1,73 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+ }
+
+iframe {
+    position: fixed;
+    left: 40%;
+    height: 100%;
+    width: 60%;
+    border: none;
+    overflow: hidden;
+}
+
+.header {
+    position: fixed;
+    left: 0;
+    height: 100%;
+    width: 40%;
+    border: none;
+    overflow: hidden;
+}
+
+     .header > div{
+
+    float:left;
+     }
+
+.header .code {
+    width: 80%;
+    height: 100%;
+}
+
+.header textarea {
+    width: 96%;
+    padding:2%;
+    border-radius: 0px;
+    height: 96%;
+    color: #222222;
+    font-size: 18px;
+}
+
+.header .actions{
+    width:18%;
+    padding: 1%;
+    height: 100%;
+}
+
+.header .btn {
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+    margin:20px 1%;
+    border-radius: 4px;
+    color: white;
+    background-color:green;
+}
+
+.header a.help{
+    display: block;
+    text-align: center;
+    font-size: 32px;
+    color: black;
+    border: none;
+    text-decoration: none;
+    background-color: white;
+}

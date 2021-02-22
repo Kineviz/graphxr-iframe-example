@@ -1,7 +1,7 @@
 ; (function ($) {
     'use strict'
 
-    const version = '2.8.0';
+    const version = '2.9.0';
 
     const GIframeOnMessageHandlerMap = {
         //id: {id,  iframeElement,  messageHandler}
@@ -9,7 +9,8 @@
 
     const GEvents = {
         "change": {},
-        "select": {}
+        "select": {},
+        "nearby":{}
     }
 
     let GTempResponse = {
@@ -77,13 +78,13 @@
         });
     }
 
-    function injectionCode( code, iframeElement = getIframeElem(), index = Date.now(),  type = 'codes') {
+    function injectionCode( code, iframeElement = getIframeElem(), index = Date.now(),  type = 'codes', params = {}) {
         if (!iframeElement || iframeElement.tagName !== "IFRAME") {
             let err = new Error(`Only support iframe element, please try document.getElementById("your_iframe_id");`);
             console.error(err.message);
             return Promise.reject(err);
         }
-        index = String(index + Date.now());
+        index =  String(index);
         //reset GTempResponse 
         GTempResponse = {
             index: -1,
@@ -100,7 +101,15 @@
             index = code;
             postMessageBody = {
                 type: "api",
-                command: code
+                command: code,
+                params
+            }
+        } else  if (type === 'func') {
+            index = code;
+            postMessageBody = {
+                type: "func",
+                func: code,
+                params
             }
         } else {
             postMessageBody = {
@@ -138,7 +147,18 @@
         }, Promise.resolve([]));
     }
 
-    function injectionApiCommand(command, iframeElement = getIframeElem()) {
+    function injectionApiFunc(funcName, params = {}, iframeElement = getIframeElem()) {
+
+        let newFuncName = String(funcName).trim();
+        if (!newFuncName && !newFuncName) {
+            let err = new Error(`Please try use those functions [update]`);
+            console.error(err.message);
+            return Promise.reject(err);
+        }
+        return injectionCode( funcName, iframeElement, funcName , 'func', params)
+    }
+
+    function injectionApiCommand(command, iframeElement = getIframeElem(),  params = {}) {
 
         let newCommand = String(command).trim();
         if (!newCommand && !command) {
@@ -146,7 +166,7 @@
             console.error(err.message);
             return Promise.reject(err);
         }
-        return injectionCode( newCommand, iframeElement, newCommand , 'api')
+        return injectionCode( newCommand, iframeElement, newCommand , 'api', params)
     }
 
     function injectionApiCommands(commands, iframeElement = getIframeElem()) {
@@ -174,14 +194,14 @@
         if (type === 'events-response' && GEvents && Object.keys(GEvents[eventName] || {}).length > 0) {
             Object.values(GEvents[eventName] || {})
                 .forEach(cb => {
-                    cb(eventName, data.response || {});
+                  cb && cb(eventName, data.response || {});
                 });
         }
     }
 
     function injectionOn(eventName = 'change', callback = () => { }, iframeElement = getIframeElem(), uniqueName = '') {
-        if (!['change', 'select'].includes(eventName) || !callback) {
-            let err = new Error(`Miss eventName['change','select'] ro callback function`);
+        if (!['change', 'select','nearby'].includes(eventName) || !callback) {
+            let err = new Error(`Miss eventName['change','select','nearby'] ro callback function`);
             return console.error(err.message);
         }
 
@@ -193,10 +213,10 @@
             uniqueName = uniqueName || callback.name;
             GEvents[eventName][uniqueName] = callback;
 
-            let codeIndex = Date.now();
+            let codeIndex = uniqueName;
             let code = `
             //convert to global
-            _app.controller.API.on('${eventName}', (data) => {
+            _app.controller.API.on('${eventName}', (eventName,data) => {
                 if (window.parent) {
                     window.parent.postMessage({
                         type: "events-response",
@@ -223,6 +243,7 @@
         version,
         injectionCode,
         injectionCodes,
+        injectionApiFunc,
         injectionApiCommand,
         injectionApiCommands,
         injectionOn
