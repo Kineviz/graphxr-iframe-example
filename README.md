@@ -89,6 +89,14 @@ graphXR.injectionApiCommand('MATCH (n)-[r]-(m) RETURN * LIMIT 100', iframeElem)
 })
 ```
 
+If you do not want node append to graphXR, please set ignoreAppend as true
+```
+graphXR.injectionApiCommand('MATCH (n)-[r]-(m) RETURN * LIMIT 100', iframeElem,{ignoreAppend:true})
+.then((resData) => {
+    console.warn("Receive query data:", resData.content)
+})
+       
+```
 
 ###  2. Injection codes 
 
