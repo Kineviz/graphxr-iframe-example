@@ -155,6 +155,50 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
         );
 ```
  
+
+ 
+#### 2.3 highlightWithNodeIds 
+
+```
+graphXR.injectionApiCommand(':getGraph', iframeElem)
+.then((resData) => {
+    console.warn("Receive all data:", resData.content)
+    const {nodes, edges} = resData.content;
+
+    //    highlightWithNodeIds
+     let top10NodeIds = (nodes ||[]).slice(0,10).map((n,i) =>{
+         return   n._GXRID 
+    })
+     graphXR.injectionApiFunc(
+        "highlightWithNodeIds",
+        { nodeIds: top10NodeIds, nodeOnly:false },
+        iframeElem
+        );
+})
+ 
+```
+
+#### 2.4 highlightWithEdgeIds 
+
+```
+graphXR.injectionApiCommand(':getGraph', iframeElem)
+.then((resData) => {
+    console.warn("Receive all data:", resData.content)
+    const {nodes, edges} = resData.content;
+
+    //    highlightWithEdgeIds
+     let top10EdgeIds = (edges ||[]).slice(0,10).map((e,i) =>{
+          return   e._GXRID 
+    })
+     graphXR.injectionApiFunc(
+        "highlightWithEdgeIds",
+        { edgeIds: top10EdgeIds, edgeOnly:false },
+        iframeElem
+        );
+})
+ 
+```
+
 ###  3. event,  only support ['change','select']
 
 

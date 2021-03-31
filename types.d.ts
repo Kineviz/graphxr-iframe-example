@@ -13,7 +13,7 @@ type callbackType = (
 type graphXR = {
   version: string;
   injectionApiFunc: (
-    funcName: "updateGraph" | "flyTo" | "updateTwinkled",
+    funcName: "updateGraph" | "flyTo" | "updateTwinkled" | "highlightWithNodeIds" | "highlightWithEdgeIds",
     params: any,
     iframeElement: HTMLElement
   ) => Promise;
