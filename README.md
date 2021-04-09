@@ -199,6 +199,26 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
  
 ```
 
+#### 2.5 flyTo 
+
+```
+graphXR.injectionApiCommand(':getGraph', iframeElem)
+.then((resData) => {
+    console.warn("Receive all data:", resData.content)
+    const {nodes, edges} = resData.content;
+    let flyToNode = nodes[0];
+    if(!flyToNode){
+        return 
+    }
+     graphXR.injectionApiFunc(
+        "flyTo",
+       flyToNode._GXRID,
+        iframeElem
+        );
+})
+ 
+```
+
 ###  3. event,  only support ['change','select']
 
 
