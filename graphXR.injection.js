@@ -1,7 +1,7 @@
 ; (function ($) {
     'use strict'
 
-    const version = '2.9.0';
+    const version = '2.10.0';
 
     const GIframeOnMessageHandlerMap = {
         //id: {id,  iframeElement,  messageHandler}
@@ -10,7 +10,8 @@
     const GEvents = {
         "change": {},
         "select": {},
-        "nearby":{}
+        "nearby":{},
+        'load':{}
     }
 
     let GTempResponse = {
@@ -200,9 +201,8 @@
     }
 
     function injectionOn(eventName = 'change', callback = () => { }, iframeElement = getIframeElem(), uniqueName = '') {
-        if (!['change', 'select','nearby'].includes(eventName) || !callback) {
-            let err = new Error(`Miss eventName['change','select','nearby'] ro callback function`);
-            return console.error(err.message);
+        if (!['change', 'select','nearby','load'].includes(eventName) || !callback) {
+            console.warn(`Miss eventName['change','select','nearby','load'] or callback function`);
         }
 
         //try remove at first, then add eventLister
@@ -213,6 +213,9 @@
             uniqueName = uniqueName || callback.name;
             GEvents[eventName][uniqueName] = callback;
 
+            if(eventName === 'load'){
+                return "load do not need injection code";
+            }
             let codeIndex = uniqueName;
             let code = `
             //convert to global

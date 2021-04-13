@@ -13,7 +13,7 @@ type callbackType = (
 type graphXR = {
   version: string;
   injectionApiFunc: (
-    funcName: "updateGraph" | "flyTo" | "updateTwinkled" | "highlightWithNodeIds" | "highlightWithEdgeIds",
+    funcName: "updateGraph" | "flyTo" | "updateTwinkled" | "highlightWithNodeIds" | "highlightWithEdgeIds" | 'selectWithNodeIds' | 'getNodeWithIds' | 'getNodeWithProps',
     params: any,
     iframeElement: HTMLElement
   ) => Promise;
@@ -30,7 +30,7 @@ type graphXR = {
     params: any
   ) => Promise;
   injectionOn: (
-    eventName: "change" | "select" | "nearby",
+    eventName: "change" | "select" | "nearby" | "load",
     callback: callbackType,
     iframeElement: HTMLElement,
     uniqueName: string

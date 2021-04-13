@@ -1,4 +1,4 @@
-### GraphXR Iframe example(V2.9.0 beta)
+### GraphXR Iframe example(V2.10.0 beta)
 
 Your can try with <https://kineviz.github.io/graphxr-iframe-example/> at first
 
@@ -32,8 +32,9 @@ You can change defaultEmbedGraphURL in index.html line 116
 ```
 http://localhost:3000?embedGraphURL=https://graphxrdev.kineviz.com/p/602d2b0787329b003351adee/blank/6033b824378ffc0034884a58/IP-TEST
 ```
-
+ 
 ### 1. ApiCommand 
+> Please sure the graphXR iframe already load, please refer 3.1
 
 #### 1.1 getGraph resData.content {nodes,edges}
 
@@ -98,24 +99,10 @@ graphXR.injectionApiCommand('MATCH (n)-[r]-(m) RETURN * LIMIT 100', iframeElem,{
        
 ```
 
-###  2. Injection codes 
+###  2. Injection Function (graphXR.injectionApiFunc) 
+> Please sure the graphXR iframe already load, please refer 3.1
 
-#### 2.1 select all (injectionCode is beta function, so do not recommand use it.)
-
-```
-graphXR.injectionApiCommand(':getGraph', iframeElem)
-.then((resData) => {
-    console.warn("Receive all data:", resData.content)
-    const {nodes} = resData.content;
-    graphXR.injectionCode(`
-        _GXR.NodesSelectManager.selectWithNodeIds(${JSON.stringify(nodes.map(n => n._GXRID))},'new')
-    ` , iframeElem).then(resData => {
-        console.warn("Injection select all nodes success:", resData)
-    })
-})
-```
-
-#### 2.2 update twinkled 
+#### 2.1 update twinkled 
 
 ```
 graphXR.injectionApiCommand(':getGraph', iframeElem)
@@ -155,9 +142,44 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
         );
 ```
  
-
  
-#### 2.3 highlightWithNodeIds 
+#### 2.2 flyTo 
+
+```
+graphXR.injectionApiCommand(':getGraph', iframeElem)
+.then((resData) => {
+    console.warn("Receive all data:", resData.content)
+    const {nodes, edges} = resData.content;
+    let flyToNode = nodes[0];
+    if(!flyToNode){
+        return 
+    }
+     graphXR.injectionApiFunc(
+        "flyTo",
+         flyToNode._GXRID,
+        iframeElem
+        );
+})
+ 
+```
+
+#### 2.3 Select nodes 
+
+```
+graphXR.injectionApiCommand(':getGraph', iframeElem)
+.then((resData) => {
+    console.warn("Receive all data:", resData.content)
+    const {nodes} = resData.content;
+    //Select all nodes
+   graphXR.injectionApiFunc(
+        "selectWithNodeIds",
+        { nodeIds: nodes.map(n => n._GXRID) },
+        iframeElem
+        );
+})
+```
+ 
+#### 2.4 highlightWithNodeIds 
 
 ```
 graphXR.injectionApiCommand(':getGraph', iframeElem)
@@ -178,7 +200,7 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
  
 ```
 
-#### 2.4 highlightWithEdgeIds 
+#### 2.5 highlightWithEdgeIds 
 
 ```
 graphXR.injectionApiCommand(':getGraph', iframeElem)
@@ -199,30 +221,50 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
  
 ```
 
-#### 2.5 flyTo 
+#### 2.6 getNodeWithId 
 
 ```
-graphXR.injectionApiCommand(':getGraph', iframeElem)
-.then((resData) => {
-    console.warn("Receive all data:", resData.content)
-    const {nodes, edges} = resData.content;
-    let flyToNode = nodes[0];
-    if(!flyToNode){
-        return 
-    }
-     graphXR.injectionApiFunc(
-        "flyTo",
-       flyToNode._GXRID,
+let _GXRID = 9999999999;
+  graphXR.injectionApiFunc(
+        "getNodeWithId",
+         _GXRID,
         iframeElem
-        );
+        ).then( res =>{
+    console.warn("Got Node:", res.content)
+})
+ 
+```
+
+#### 2.7 getNodeWithProps 
+
+```
+//find the node where name = 'Sean' 
+graphXR.injectionApiFunc(
+        "getNodeWithProps",
+         {name:"Sean"},
+        iframeElem
+        ).then( res =>{
+    console.warn("Got Node:", res.content)
 })
  
 ```
 
 ###  3. event,  only support ['change','select']
 
+#### 3.1 graphxr load event
+>  You can use load event sure the GraphXR iframe already loaded
+``` 
+graphXR.injectionOn("load", (eventName, res) => {
+    if(res === 'init'){
+    console.warn("GraphXR iframe already load", res)
+    }else{
+    console.warn("GraphXR Load the view ", res)
+    }
+}, iframeElem, "iframe-unique-name")
 
-#### 3.1 graphxr change event
+```
+
+#### 3.2 graphxr change event
 
 ```
 graphXR.injectionOn("change", () => {
@@ -235,7 +277,7 @@ graphXR.injectionOn("change", () => {
 }, iframeElem, "iframe-unique-name")
 ```
 
-#### 3.2 graphxr select event
+#### 3.3 graphxr select event
 
 ``` 
 graphXR.injectionOn("select", () => {
@@ -249,8 +291,22 @@ graphXR.injectionOn("select", () => {
 
 ```
 
+#### 3.4 graphxr nearby event
 
-#### 4. Layout  
+``` 
+graphXR.injectionOn("nearby", (eventName, res) => {
+    console.warn("receive nearby nodes", res)
+}, iframeElem, "iframe-unique-name")
+
+```
+
+
+#### 4 Injection Code
+
+> InjectionCode is beta function, so do not recommand use it. 
+> Please sure the graphXR iframe already load, please refer 3.1
+ 
+#### 4.1 Layout  
 
 Support force, line, grid, circle, cube
 
