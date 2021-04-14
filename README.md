@@ -111,7 +111,7 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
     const {nodes, edges} = resData.content;
 
     //update twinkled 
-    let colors =['red','yellow','green',null]
+    let colors =['green','yellow','red',null]
     let topNode10 = (nodes ||[]).slice(0,10).map((n,i) =>{
         //will can auto update the props to the node
         let otherProps ={_index:i}
