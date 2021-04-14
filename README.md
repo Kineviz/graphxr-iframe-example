@@ -118,6 +118,8 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
         return{
           id: n._GXRID,
           rate: i%4+1,
+          //Must set stat as a string value
+          stat:"warning",
           color: colors[i%4],//color is null, mean rest to bak
           ...otherProps
         }
