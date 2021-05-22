@@ -130,14 +130,11 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
 <iframe id="injection-graphXR-iframe-id"  origin="*" > </iframe>
 
 <script id="script" type="text/javascript">
-    let getQueryString = function (name) {
-           let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-           let r = window.location.search.substr(1).match(reg);
-           if (r != null) return unescape(r[2]); return null;
-       }
+ 
+       let URLSearch = new URLSearchParams(window.location.search.replace(/^\?/ig,''));
        let defaultEmbedGraphURL = 'https://graphxr.kineviz.com/share/5fad3be86fd8dd0068f8c833/Russian%20Troll%20Tweets%20/5fad3cc86fd8dd0068f8c8d4/Russian-troll-tweets'
        let iframe = document.getElementById('injection-graphXR-iframe-id');
-       iframe.setAttribute('src', getQueryString('embedGraphURL') || getQueryString('url') || iframe.getAttribute('src') ||  defaultEmbedGraphURL);
+       iframe.setAttribute('src', URLSearch.get('embedGraphURL') || URLSearch.get('url') || iframe.getAttribute('src') ||  defaultEmbedGraphURL);
    </script>
 
 <script id="script" type="text/javascript">
