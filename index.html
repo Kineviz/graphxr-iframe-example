@@ -104,7 +104,7 @@
 Create a project ,from Project=>Data, create a view enable share 
 from the project window by clicking on the lock icon
 Get the shared view link, for example, here is a link for VC data set:
-https://graphxr.kineviz.com/share/5c633dfe197b00001e855294/VC%20investment%202004-2013/5c65e7be851f2c0036ef27c9
+https://app.graphxr.cn/share/63b8f608ad61a16fbfd0315f/Movies/6493bdadc4c3d37b878d800e/Game-of-Throne
 
 */
 let iframeElem = document.getElementById("injection-graphXR-iframe-id");
@@ -132,7 +132,7 @@ graphXR.injectionApiCommand(':getGraph', iframeElem)
 <script id="script" type="text/javascript">
  
        let URLSearch = new URLSearchParams(window.location.search.replace(/^\?/ig,''));
-       let defaultEmbedGraphURL = 'https://graphxr.kineviz.com/share/5fad3be86fd8dd0068f8c833/Russian%20Troll%20Tweets%20/5fad3cc86fd8dd0068f8c8d4/Russian-troll-tweets'
+       let defaultEmbedGraphURL = 'https://app.graphxr.cn/share/63b8f608ad61a16fbfd0315f/Movies/6493bdadc4c3d37b878d800e/Game-of-Throne'
        let iframe = document.getElementById('injection-graphXR-iframe-id');
        iframe.setAttribute('src', URLSearch.get('embedGraphURL') || URLSearch.get('url') || iframe.getAttribute('src') ||  defaultEmbedGraphURL);
    </script>
